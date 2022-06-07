@@ -3,7 +3,7 @@ import numpy as np
 import time
 from ctypes import cast, POINTER
 
-import HandTrackingModule as htm
+import HandTrackingModule
 import autopy
 import cv2
 import pyautogui
@@ -17,7 +17,7 @@ cap.set(4, hCam)
 pTime = 0
 # cTime = 0
 
-detector = htm.hand_detector(max_hands=1, detection_con=0.85, track_con=0.8)
+detector = HandTrackingModule.hand_detector(max_hands=1, detection_con=0.85, track_con=0.8)
 
 devices = AudioUtilities.GetSpeakers()
 interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
@@ -39,6 +39,13 @@ mode = ''
 active = 0
 
 pyautogui.FAILSAFE = False
+
+
+def put_text(text_mode, loc=(250, 450), text_color=(0, 255, 255)):
+    cv2.putText(img, str(text_mode), loc, cv2.FONT_HERSHEY_COMPLEX_SMALL,
+                3, text_color, 3)
+
+
 while True:
     success, img = cap.read()
     img = detector.find_hands(img)
@@ -60,8 +67,8 @@ while True:
             else:
                 fingers.append(0)
 
-        for id in range(1, 5):
-            if lmList[tipIds[id]][2] < lmList[tipIds[id] - 2][2]:
+        for id_s in range(1, 5):
+            if lmList[tipIds[id_s]][2] < lmList[tipIds[id_s] - 2][2]:
                 fingers.append(1)
             else:
                 fingers.append(0)
@@ -79,32 +86,35 @@ while True:
             mode = 'Cursor'
             active = 1
 
-    ############# Scroll 👇👇👇👇##############
+    # ############ Scroll 👇👇👇👇##############
+
     if mode == 'Scroll':
         active = 1
         #   print(mode)
-        putText(mode)
+        put_text(mode)
         cv2.rectangle(img, (200, 410), (245, 460), (255, 255, 255), cv2.FILLED)
         if len(lmList) != 0:
             if fingers == [0, 1, 0, 0, 0]:
                 # print('up')
                 # time.sleep(0.1)
-                putText(mode='U', loc=(200, 455), color=(0, 255, 0))
+                put_text(text_mode='U', loc=(200, 455), text_color=(0, 255, 0))
                 pyautogui.scroll(300)
 
             if fingers == [0, 1, 1, 0, 0]:
                 # print('down')
                 #  time.sleep(0.1)
-                putText(mode='D', loc=(200, 455), color=(0, 0, 255))
+                put_text(text_mode='D', loc=(200, 455), text_color=(0, 0, 255))
                 pyautogui.scroll(-300)
             elif fingers == [0, 0, 0, 0, 0]:
                 active = 0
                 mode = 'N'
-    ################# Volume 👇👇👇####################
+
+    # ################ Volume 👇👇👇####################
+
     if mode == 'Volume':
         active = 1
         # print(mode)
-        putText(mode)
+        put_text(mode)
         if len(lmList) != 0:
             if fingers[-1] == 1:
                 active = 0
@@ -154,7 +164,7 @@ while True:
     if mode == 'Cursor':
         active = 1
         # print(mode)
-        putText(mode)
+        put_text(mode)
         cv2.rectangle(img, (110, 20), (620, 350), (255, 255, 255), 3)
 
         if fingers[1:] == [0, 0, 0, 0]:  # thumb excluded
@@ -190,8 +200,3 @@ while True:
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-
-
-    def putText(mode, loc=(250, 450), color=(0, 255, 255)):
-        cv2.putText(img, str(mode), loc, cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                    3, color, 3)

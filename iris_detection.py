@@ -10,7 +10,6 @@ LEFT_IRIS = [474, 475, 476, 477]
 RIGHT_EYE = [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246]
 RIGHT_IRIS = [469, 470, 471, 472]
 
-
 camera = cv2.VideoCapture(0)
 
 with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.5,
@@ -26,7 +25,8 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
         results = face_mesh.process(rgb_frame)
 
         if results.multi_face_landmarks:
-            mesh_points = np.array([np.multiply([p.x, p.y], [image_w, image_h]).astype(int) for p in results.multi_face_landmarks[0].landmark])
+            mesh_points = np.array([np.multiply([p.x, p.y], [image_w, image_h]).astype(int) for p in
+                                    results.multi_face_landmarks[0].landmark])
 
             # Eyes Detection
             cv2.polylines(frame, [mesh_points[LEFT_EYE]], True, (255, 0, 255), 1, cv2.LINE_AA)

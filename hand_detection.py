@@ -11,7 +11,7 @@ from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 wCam, hCam = 640, 480
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(3, wCam)
 cap.set(4, hCam)
 pTime = 0
@@ -175,8 +175,10 @@ while True:
             if len(lmList) != 0:
                 x1, y1 = lmList[8][1], lmList[8][2]
                 w, h = autopy.screen.size()
+
                 X = int(np.interp(x1, [110, 620], [0, w - 1]))
                 Y = int(np.interp(y1, [20, 350], [0, h - 1]))
+
                 cv2.circle(img, (lmList[8][1], lmList[8][2]), 7, (255, 255, 255), cv2.FILLED)
                 cv2.circle(img, (lmList[4][1], lmList[4][2]), 10, (0, 255, 0), cv2.FILLED)  # thumb
 
@@ -184,7 +186,9 @@ while True:
                     X = X - X % 2
                 if Y % 2 != 0:
                     Y = Y - Y % 2
+
                 print(X, Y)
+
                 autopy.mouse.move(X, Y)
                 #  pyautogui.moveTo(X,Y)
                 if fingers[0] == 0:

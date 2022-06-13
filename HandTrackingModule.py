@@ -4,14 +4,14 @@ import time
 
 
 class hand_detector:
-    def __init__(self, mode=False, max_hands=2, detection_con=0.5, track_con=0.5):
+    def __init__(self, mode=False, max_hands=2, detection_con=0.5, model_complexity=1,  track_con=0.5):
         self.mode = mode
         self.maxHands = max_hands
+        self.model_complexity = model_complexity
         self.detectionCon = detection_con
         self.trackCon = track_con
-
         self.mpHands = mp.solutions.hands
-        self.hands = self.mpHands.Hands(self.mode, self.maxHands,
+        self.hands = self.mpHands.Hands(self.mode, self.maxHands, self.model_complexity,
                                         self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
         self.results = 0
@@ -54,7 +54,7 @@ class hand_detector:
 def main():
     p_time = 0
     c_time = 0
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     detector = hand_detector(max_hands=1)
     while True:
         success, img = cap.read()

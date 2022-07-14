@@ -48,6 +48,7 @@ def put_text(text_mode, loc=(250, 450), text_color=(0, 255, 255)):
 
 while True:
     success, img = cap.read()
+    img = cv2.flip(img, 1)
     img = detector.find_hands(img)
     lmList = detector.find_position(img, draw=False)
     # print(lmList)

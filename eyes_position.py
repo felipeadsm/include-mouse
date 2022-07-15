@@ -6,16 +6,16 @@ import autopy
 
 
 # TODO: Receber os valores do retângulo em volta dos olhos
-def move_right():
+def move_right(initial_point, final_point):
     # Iris Movimentation
     put_text('iris')
-    cv2.rectangle(frame, (110, 20), (620, 350), (255, 255, 255), 3)
+    cv2.rectangle(frame, initial_point, final_point, (255, 255, 255), 1)
 
     x1, y1 = center_left[0], center_left[1]
     w, h = autopy.screen.size()
 
-    X = int(np.interp(x1, [110, 620], [0, w - 1]))
-    Y = int(np.interp(y1, [20, 350], [0, h - 1]))
+    X = int(np.interp(x1, [initial_point[0], final_point[0]], [0, w - 1]))
+    Y = int(np.interp(y1, [initial_point[1], final_point[1]], [0, h - 1]))
 
     if X % 2 != 0:
         X = X - X % 2
@@ -81,6 +81,8 @@ L_H_LEFT = [362]
 L_H_RIGHT = [263]
 L_REC = [362, 374, 263, 386]
 
+i = 0
+
 camera = cv2.VideoCapture(0)
 
 with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.5,
@@ -90,7 +92,7 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
         if not ret:
             break
 
-        scale_percent = 1000  # percent of original size
+        scale_percent = 200  # percent of original size
         width = int(frame.shape[1] * scale_percent / 100)
         height = int(frame.shape[0] * scale_percent / 100)
         dim = (width, height)
@@ -137,7 +139,19 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
             # cv2.polylines(frame, [mesh_points[LEFT_EYE]], True, (0, 255, 0), 1, cv2.LINE_AA)
             # cv2.polylines(frame, [mesh_points[RIGHT_EYE]], True, (0, 255, 0), 1, cv2.LINE_AA)
 
-            move_right()
+            point_xi = center_left[0] - 36
+            point_yi = center_left[1] + 20
+            point_xf = center_left[0] + 36
+            point_yf = center_left[1] - 20
+            p_ini = (point_xi, point_yi)
+            p_fin = (point_xf, point_yf)
+
+            if i == 0:
+                pi = p_ini
+                pf = p_fin
+                i += 1
+
+            move_right(pi, pf)
 
         cv2.imshow('image', frame)
         key = cv2.waitKey(1)

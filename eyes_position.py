@@ -6,12 +6,12 @@ import autopy
 
 
 # TODO: Receber os valores do retângulo em volta dos olhos
-def move_right(initial_point, final_point):
+def move_mouse(initial_point, final_point, c_left):
     # Iris Movimentation
     put_text('iris')
     cv2.rectangle(frame, initial_point, final_point, (255, 255, 255), 1)
 
-    x1, y1 = center_left[0], center_left[1]
+    x1, y1 = c_left[0], c_left[1]
     w, h = autopy.screen.size()
 
     X = int(np.interp(x1, [initial_point[0], final_point[0]], [0, w - 1]))
@@ -27,7 +27,6 @@ def move_right(initial_point, final_point):
 
 
 # TODO: Criar função para clique do mouse através da piscada
-
 def put_text(text_mode, loc=(250, 450), text_color=(0, 255, 255)):
     cv2.putText(frame, str(text_mode), loc, cv2.FONT_HERSHEY_COMPLEX_SMALL,
                 3, text_color, 3)
@@ -139,19 +138,22 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
             # cv2.polylines(frame, [mesh_points[LEFT_EYE]], True, (0, 255, 0), 1, cv2.LINE_AA)
             # cv2.polylines(frame, [mesh_points[RIGHT_EYE]], True, (0, 255, 0), 1, cv2.LINE_AA)
 
-            point_xi = center_left[0] - 36
-            point_yi = center_left[1] + 20
-            point_xf = center_left[0] + 36
-            point_yf = center_left[1] - 20
-            p_ini = (point_xi, point_yi)
-            p_fin = (point_xf, point_yf)
+            # criar uma linha entre os dois olhos e pegar o ponto central da linha para nortear o movimento
+            cv2.line(frame, center_left, center_right, (0, 0, 0), 1, cv2.LINE_AA)
 
-            if i == 0:
-                pi = p_ini
-                pf = p_fin
-                i += 1
+            # point_xi = center_left[0] - 36
+            # point_yi = center_left[1] + 20
+            # point_xf = center_left[0] + 36
+            # point_yf = center_left[1] - 20
+            # p_ini = (point_xi, point_yi)
+            # p_fin = (point_xf, point_yf)
 
-            move_right(pi, pf)
+            # if i == 0:
+            pi = (512, 384)
+            pf = (768, 576)
+            #    i += 1
+
+            move_mouse(pi, pf, center_left)
 
         cv2.imshow('image', frame)
         key = cv2.waitKey(1)

@@ -1,8 +1,10 @@
+import math
+import autopy
 import cv2 as cv2
 import numpy as np
 import mediapipe as mp
-import math
-import autopy
+
+from scipy.spatial import distance as dist
 
 
 # TODO: Receber os valores do retângulo em volta dos olhos
@@ -24,6 +26,20 @@ def move_mouse(initial_point, final_point, c_left):
 
     # print(X, Y)
     autopy.mouse.move(X, Y)
+
+
+# defining a function to calculate the EAR
+def calculate_EAR(eye):
+    # calculate the vertical distances
+    y1 = dist.euclidean(eye[1], eye[5])
+    y2 = dist.euclidean(eye[2], eye[4])
+
+    # calculate the horizontal distance
+    x1 = dist.euclidean(eye[0], eye[3])
+
+    # calculate the EAR
+    EAR = (y1 + y2) / x1
+    return EAR
 
 
 # TODO: Criar função para clique do mouse através da piscada

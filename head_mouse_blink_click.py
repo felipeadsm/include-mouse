@@ -35,13 +35,11 @@ def move_mouse(frame, initial_point, final_point, c_left):
     X = int(np.interp(x1, [initial_point[0], final_point[0]], [0, w - 1]))
     Y = int(np.interp(y1, [initial_point[1], final_point[1]], [0, h - 1]))
 
-    # TODO: Saber o que isso faz
+    # TODO: Smoothing function
     if X % 2 != 0:
         X = X - X % 2
     if Y % 2 != 0:
         Y = Y - Y % 2
-
-    # print(X, Y)
 
     # Move the cursor for the interpolation position
     autopy.mouse.move(X, Y)
@@ -150,7 +148,7 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
             # Avg of left and right eye EAR
             avg_ear_eyes = (left_ear + right_ear) / 2
 
-            print(avg_ear_eyes)
+            # print(avg_ear_eyes)
 
             if avg_ear_eyes < blink_thresh:
                 # Incrementing the frame count

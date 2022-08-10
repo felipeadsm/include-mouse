@@ -1,4 +1,5 @@
 import autopy
+import math
 import cv2 as cv2
 import numpy as np
 import mediapipe as mp
@@ -20,6 +21,21 @@ def calculate_ear(eye):
     return EAR
 
 
+def suavize_move(current_point, future_point):
+    current_point = current_point[0] * current_point[1]
+    future_point = future_point[0] * future_point[1]
+
+    diference_between_points = future_point - current_point
+    abs_between = abs(diference_between_points)
+    b = 100
+    expression = ((abs_between * math.e + b - abs_between)/b)
+    out_point = current_point + round(diference_between_points * math.log(expression))
+
+    print(round(out_point))
+
+    return round(out_point)
+
+
 # TODO: Receber os valores do retângulo em volta dos olhos
 def move_mouse(frame, initial_point, final_point, c_left):
     # Draw a reference rectangle
@@ -35,11 +51,13 @@ def move_mouse(frame, initial_point, final_point, c_left):
     X = int(np.interp(x1, [initial_point[0], final_point[0]], [0, w - 1]))
     Y = int(np.interp(y1, [initial_point[1], final_point[1]], [0, h - 1]))
 
-    # TODO: Smoothing function
-    if X % 2 != 0:
-        X = X - X % 2
-    if Y % 2 != 0:
-        Y = Y - Y % 2
+    # # TODO: Função de transferência
+    # if X % 2 != 0:
+    #     X = X - X % 2
+    # if Y % 2 != 0:
+    #     Y = Y - Y % 2
+
+    suavize_move(autopy.mouse.location(), (X, Y))
 
     # Move the cursor for the interpolation position
     autopy.mouse.move(X, Y)

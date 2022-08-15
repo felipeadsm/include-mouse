@@ -21,14 +21,14 @@ def calculate_ear(eye):
     return EAR
 
 
-def suavize_move(current_point, future_point):
+def suavize_move_1(current_point, future_point):
     current_point = current_point[0] * current_point[1]
     future_point = future_point[0] * future_point[1]
 
     diference_between_points = future_point - current_point
     abs_between = abs(diference_between_points)
     b = 100
-    expression = ((abs_between * math.e + b - abs_between)/b)
+    expression = ((abs_between * math.e + b - abs_between) / b)
     out_point = current_point + round(diference_between_points * math.log(expression))
 
     print(round(out_point))
@@ -36,10 +36,22 @@ def suavize_move(current_point, future_point):
     return round(out_point)
 
 
+def suavize_move(x, y, x_current_point, y_current_point):
+    A = 0.0005
+
+    x_inc = A * (x - x_current_point) ** 2 * np.sign(x - x_current_point)
+    y_inc = A * (y - y_current_point) ** 2 * np.sign(y - y_current_point)
+
+    x_final = x_inc + x_current_point
+    y_final = y_inc + y_current_point
+
+    return x_final, y_final
+
+
 # TODO: Receber os valores do retângulo em volta dos olhos
-def move_mouse(frame, initial_point, final_point, c_left):
+def move_mouse(img, initial_point, final_point, c_left):
     # Draw a reference rectangle
-    cv2.rectangle(frame, initial_point, final_point, (255, 255, 255), 1)
+    cv2.rectangle(img, initial_point, final_point, (255, 255, 255), 1)
 
     # Take a center of eye
     x1, y1 = c_left[0], c_left[1]
@@ -51,16 +63,15 @@ def move_mouse(frame, initial_point, final_point, c_left):
     X = int(np.interp(x1, [initial_point[0], final_point[0]], [0, w - 1]))
     Y = int(np.interp(y1, [initial_point[1], final_point[1]], [0, h - 1]))
 
-    # # TODO: Função de transferência
-    # if X % 2 != 0:
-    #     X = X - X % 2
-    # if Y % 2 != 0:
-    #     Y = Y - Y % 2
+    current_point = autopy.mouse.location()
 
-    suavize_move(autopy.mouse.location(), (X, Y))
+    # TODO: Transfer function
+    x_move, y_move = suavize_move(X, Y, current_point[0], current_point[1])
 
     # Move the cursor for the interpolation position
-    autopy.mouse.move(X, Y)
+    # autopy.mouse.move(X, Y)
+
+    autopy.mouse.move(x_move, y_move)
 
 
 # Main program
@@ -79,7 +90,6 @@ R_V_BOT_1 = [145]  # index 4
 R_V_TOP_2 = [158]  # index 11
 R_V_BOT_2 = [153]  # index 5
 RIGHT_VERTICAL_LIST = [R_V_TOP_1, R_V_BOT_1, R_V_TOP_2, R_V_TOP_2]
-
 
 # Left Eyes Points
 LEFT_EYE = [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385, 384, 398]

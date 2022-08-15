@@ -65,7 +65,7 @@ def move_mouse(img, initial_point, final_point, c_left):
 
     current_point = autopy.mouse.location()
 
-    # TODO: Transfer function
+    # TODO: Call transfer function
     x_move, y_move = suavize_move(X, Y, current_point[0], current_point[1])
 
     # Move the cursor for the interpolation position
@@ -81,29 +81,9 @@ mp_face_mesh = mp.solutions.face_mesh
 RIGHT_EYE = [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246]
 RIGHT_IRIS = [474, 475, 476, 477]
 
-R_H_LEFT = [33]  # index 0
-R_H_RIGHT = [133]  # index 8
-RIGHT_HORIZONTAL_LIST = [R_H_LEFT, R_H_RIGHT]
-
-R_V_TOP_1 = [159]  # index 12
-R_V_BOT_1 = [145]  # index 4
-R_V_TOP_2 = [158]  # index 11
-R_V_BOT_2 = [153]  # index 5
-RIGHT_VERTICAL_LIST = [R_V_TOP_1, R_V_BOT_1, R_V_TOP_2, R_V_TOP_2]
-
 # Left Eyes Points
 LEFT_EYE = [362, 382, 381, 380, 374, 373, 390, 249, 263, 466, 388, 387, 386, 385, 384, 398]
 LEFT_IRIS = [469, 470, 471, 472]
-
-L_H_LEFT = [362]  # index 0
-L_H_RIGHT = [263]  # index 8
-LEFT_HORIZONTAL_LIST = [L_H_LEFT, L_H_RIGHT]
-
-L_V_TOP_1 = [386]  # index 12
-L_V_BOT_1 = [374]  # index 4
-L_V_TOP_2 = [87]  # index 11
-L_V_BOT_2 = [373]  # index 5
-LEFT_VERTICAL_LIST = [L_V_TOP_1, L_V_BOT_1, L_V_TOP_2, L_V_TOP_2]
 
 # Variables
 i = 0

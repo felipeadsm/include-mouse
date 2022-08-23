@@ -37,7 +37,8 @@ def suavize_move_1(current_point, future_point):
 
 
 def suavize_move(x, y, x_current_point, y_current_point):
-    A = 0.0005
+    # TODO: É interessante variar o valor de A para obter um movimento mais rápido
+    A = 0.001
 
     x_inc = A * (x - x_current_point) ** 2 * np.sign(x - x_current_point)
     y_inc = A * (y - y_current_point) ** 2 * np.sign(y - y_current_point)

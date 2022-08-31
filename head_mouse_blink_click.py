@@ -105,11 +105,8 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
 
         # Code block to increase camera size
         # Percent of original size
-        scale_percent = 200
-        width = int(frame.shape[1] * scale_percent / 100)
-        height = int(frame.shape[0] * scale_percent / 100)
-        dim = (width, height)
-        frame = cv2.resize(frame, dim, interpolation=cv2.INTER_AREA)
+        width = frame.shape[1]
+        height = frame.shape[0]
 
         # Convert the bgr frame to rgb
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -130,12 +127,12 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
             center_left = np.array([l_cx, l_cy], dtype=np.int32)
             center_right = np.array([r_cx, r_cy], dtype=np.int32)
 
-            # Iris Detection: Circle
-            cv2.circle(frame, center_left, int(l_radius), (255, 0, 255), 1, cv2.LINE_AA)
-            cv2.circle(frame, center_right, int(r_radius), (255, 0, 255), 1, cv2.LINE_AA)
-
-            # Create a line betwen two eyes
-            cv2.line(frame, center_left, center_right, (0, 0, 0), 1, cv2.LINE_AA)
+            # # Iris Detection: Circle
+            # cv2.circle(frame, center_left, int(l_radius), (255, 0, 255), 1, cv2.LINE_AA)
+            # cv2.circle(frame, center_right, int(r_radius), (255, 0, 255), 1, cv2.LINE_AA)
+            #
+            # # Create a line betwen two eyes
+            # cv2.line(frame, center_left, center_right, (0, 0, 0), 1, cv2.LINE_AA)
 
             # Calculates the midpoint between the two eyesCalculates a midpoint between the two eyes
             diff_eyes = ((center_right[0] - center_left[0]), (center_right[1] - center_left[1]))
@@ -143,8 +140,8 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
 
             # TODO: Automatizar essa função criando o retângulo dependendo do tamanho da tela
             # Sets the initial and final coordinate for the reference rectangle
-            pi = (512, 384)
-            pf = (768, 576)
+            pi = (256, 192)
+            pf = (384, 288)
 
             # Call the move mouse function
             move_mouse(frame, pi, pf, center_eyes)

@@ -21,21 +21,6 @@ def calculate_ear(eye):
     return EAR
 
 
-def suavize_move_1(current_point, future_point):
-    current_point = current_point[0] * current_point[1]
-    future_point = future_point[0] * future_point[1]
-
-    diference_between_points = future_point - current_point
-    abs_between = abs(diference_between_points)
-    b = 100
-    expression = ((abs_between * math.e + b - abs_between) / b)
-    out_point = current_point + round(diference_between_points * math.log(expression))
-
-    print(round(out_point))
-
-    return round(out_point)
-
-
 def suavize_move(x, y, x_current_point, y_current_point):
     # TODO: É interessante variar o valor de A para obter um movimento mais rápido
     A = 0.001

@@ -1,9 +1,7 @@
 import autopy
-import math
 import cv2 as cv2
 import numpy as np
 import mediapipe as mp
-
 from scipy.spatial import distance as dist
 
 
@@ -21,8 +19,8 @@ def calculate_ear(eye):
     return EAR
 
 
-def suavize_move(x, y, x_current_point, y_current_point):
-    # TODO: É interessante variar o valor de A para obter um movimento mais rápido
+def smooth_move(x, y, x_current_point, y_current_point):
+    # It is interesting to vary the value of A to obtain a faster movement
     A = 0.001
 
     x_inc = A * (x - x_current_point) ** 2 * np.sign(x - x_current_point)
@@ -34,7 +32,6 @@ def suavize_move(x, y, x_current_point, y_current_point):
     return x_final, y_final
 
 
-# TODO: Receber os valores do retângulo em volta dos olhos
 def move_mouse(img, initial_point, final_point, c_left):
     # Draw a reference rectangle
     cv2.rectangle(img, initial_point, final_point, (255, 255, 255), 1)
@@ -51,11 +48,8 @@ def move_mouse(img, initial_point, final_point, c_left):
 
     current_point = autopy.mouse.location()
 
-    # TODO: Call transfer function
-    x_move, y_move = suavize_move(X, Y, current_point[0], current_point[1])
-
-    # Move the cursor for the interpolation position
-    # autopy.mouse.move(X, Y)
+    # Call smoothing function
+    x_move, y_move = smooth_move(X, Y, current_point[0], current_point[1])
 
     autopy.mouse.move(x_move, y_move)
 
@@ -112,18 +106,10 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
             center_left = np.array([l_cx, l_cy], dtype=np.int32)
             center_right = np.array([r_cx, r_cy], dtype=np.int32)
 
-            # # Iris Detection: Circle
-            # cv2.circle(frame, center_left, int(l_radius), (255, 0, 255), 1, cv2.LINE_AA)
-            # cv2.circle(frame, center_right, int(r_radius), (255, 0, 255), 1, cv2.LINE_AA)
-            #
-            # # Create a line betwen two eyes
-            # cv2.line(frame, center_left, center_right, (0, 0, 0), 1, cv2.LINE_AA)
-
             # Calculates the midpoint between the two eyesCalculates a midpoint between the two eyes
             diff_eyes = ((center_right[0] - center_left[0]), (center_right[1] - center_left[1]))
             center_eyes = ((center_left[0] + diff_eyes[0] / 2), (center_left[1] + diff_eyes[1] / 2))
 
-            # TODO: Automatizar essa função criando o retângulo dependendo do tamanho da tela
             # Sets the initial and final coordinate for the reference rectangle
             pi = (256, 192)
             pf = (384, 288)
@@ -139,20 +125,16 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
             # Avg of left and right eye EAR
             avg_ear_eyes = (left_ear + right_ear) / 2
 
-            # print(avg_ear_eyes)
-
             if avg_ear_eyes < blink_thresh:
                 # Incrementing the frame count
                 count_frame += 1
             else:
                 if count_frame >= blink_frame:
-                    cv2.putText(frame, 'Blink Detected', (30, 30), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 200, 0), 1)
                     autopy.mouse.click()
                     count_frame = 0
 
         cv2.imshow('image', frame)
         key = cv2.waitKey(1)
-
         if key == ord('q'):
             break
 

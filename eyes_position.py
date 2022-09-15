@@ -3,7 +3,6 @@ import autopy
 import cv2 as cv2
 import numpy as np
 import mediapipe as mp
-
 from scipy.spatial import distance as dist
 
 

@@ -1,0 +1,15 @@
+name: includevote
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - mysql-connector-python
+  - numpy
+  - pandas
+  - scipy
+  - pip:
+    - opencv-python==4.5.4.60
+    - autopy
+    - mediapipe

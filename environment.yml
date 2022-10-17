@@ -1,4 +1,5 @@
-name: includevote
+name:
+  - includevote
 channels:
   - conda-forge
   - defaults

@@ -51,7 +51,10 @@ def move_mouse(img, initial_point, final_point, c_left):
     # Call smoothing function
     x_move, y_move = smooth_move(X, Y, current_point[0], current_point[1])
 
-    autopy.mouse.move(x_move, y_move)
+    try:
+        autopy.mouse.move(x_move, y_move)
+    except Exception as e:
+        print(e)
 
 
 # Main program
@@ -71,11 +74,11 @@ blink_thresh = 0.35
 blink_frame = 4
 count_frame = 0
 
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
 with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.5,
                            min_tracking_confidence=0.5) as face_mesh:
-    while True:
+    while camera.isOpened():
         ret, frame = camera.read()
         frame = cv2.flip(frame, 1)
 
@@ -122,9 +125,10 @@ with mp_face_mesh.FaceMesh(max_num_faces=1, refine_landmarks=True, min_detection
             left_ear = calculate_ear(mesh_points[LEFT_EYE])
             right_ear = calculate_ear(mesh_points[RIGHT_EYE])
 
-            # Avg of left and right eye EAR
+            # Average of left and right eye EAR
             avg_ear_eyes = (left_ear + right_ear) / 2
 
+            # Check if the average EAR is less than the threshold, if not, the click event is fired
             if avg_ear_eyes < blink_thresh:
                 # Incrementing the frame count
                 count_frame += 1

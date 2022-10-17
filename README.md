@@ -1,9 +1,9 @@
-# IncludeMouse
+# Include Mouse
 
-### Criação do Ambiente Virtual:
-**OBS: É necessário que se crie um ambiente virtual através do anaconda**
+### Creation of the Virtual Environment:
+**NOTE: It is necessary to create a virtual environment through anaconda**
 
-Rodar este comando para criar o ambiente conda a partir da pasta dependencies/env e rodar o comando: *conda env create environment.yml*
+Run this command to create the anaconda environment from the dependencies/env folder and run the command: *conda env create environment.yml*
 
 ```
 conda env create environment.yml

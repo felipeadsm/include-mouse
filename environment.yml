@@ -1,4 +1,4 @@
-name: includevote
+name: includemouse
 channels:
   - conda-forge
   - defaults
@@ -6,7 +6,6 @@ dependencies:
   - python=3.8
   - pip
   - numpy
-  - pandas
   - scipy
   - pip:
     - opencv-python==4.5.4.60
